@@ -3,12 +3,16 @@ PROGRAMS=postmark
 
 all: $(PROGRAMS)
 
-CC=gcc -O2 -g -Wall -pipe
+#CC=gcc
+CC=../buildtools/local/bin/x86_64-pc-xomb-gcc
+CFLAGS = -O2 -g -Wall -pipe
+
+LFLAGS = -L../xomb/user/c/lib -L../xomb/runtimes/mindrt -l:drt0.a -l:syscall.a -l:mindrt.a
 
 MAINSRC=postmark-1.51.c
 
 postmark: $(MAINSRC)
-	$(CC) $(MAINSRC) $(OBJS) -o postmark $(LFLAGS)
+	$(CC) $(CFLAGS) $(MAINSRC) $(OBJS) -o postmark $(LFLAGS)
 
 install:
 	mkdir -p $(DESTDIR)/usr/bin
@@ -16,7 +20,7 @@ install:
 	cp $(PROGRAMS) $(DESTDIR)/usr/bin
 
 %.o: %.cpp %.h
-	$(CC) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(PROGRAMS) build-stamp install-stamp build
